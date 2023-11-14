@@ -6,8 +6,15 @@ export function AdminPAC() {
 return(
     <div>
         <Header></Header>
+        <main style={{
+            maxWidth: "1000px",
+            margin: "0 auto", 
+
+        }}>
         <Filter></Filter>
         <Table></Table>
+        </main>
+ 
     </div>
 )
 }
