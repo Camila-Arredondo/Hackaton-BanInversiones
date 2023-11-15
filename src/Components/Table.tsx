@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import PageContext from "../Context/page.context";
 import * as XLSX from 'xlsx-color';
 import { ArrowFilter } from "./arrowfilter";
+import { Exportar } from "./exportar";
 
 export function Table() {
 
@@ -22,6 +23,36 @@ export function Table() {
   }
 
 
+  const handleExportCsv = () => {
+    const selectedPersons = datos.filter((person: any) => person.selected);
+    let data = selectedPersons.map((person: any ) => {
+      return {
+        "Rut": person.rut,
+        "Nombre": person.nombre,
+        "Banco": person.banco,
+        "Num de Cuenta": person.ncuenta,
+        "Monto": "$"+ person.monto.toLocaleString('es-ES'),
+        "Producto": person.producto,
+        "Codigo de Servicio": person.codigoserv,
+        
+      }
+    });
+
+    const csvData = data.map((item: any) => {
+      return Object.values(item).join(',');
+    });
+    csvData.unshift(Object.keys(data[0]).join(','));
+
+    const csvContent = `data:text/csv;charset=ascii,${csvData.join('\n')}`;
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'ProductosPac.csv');
+    document.body.appendChild(link);
+    link.click();
+
+  };
 
 const handleCheckBoxChange = () => {
   setChecked(!checked);
@@ -68,7 +99,7 @@ const handleItemsPerPageChange = (e: any) => {
   setPersonfilter(persons.slice(0, Number(e.target.value)));
 }
 
-  const handleExportButtonClick = () => {
+  const handleExportExcel = () => {
     const selectedPersons = datos.filter((person: any) => person.selected);
     let dataExcel = selectedPersons.map((person: any ) => {
       return {
@@ -116,7 +147,11 @@ const handleItemsPerPageChange = (e: any) => {
 
   return (
     <div className="px-10 sm:px-6 lg:px-8">
+
       <div className="mt-8 flow-root">
+      <div className="flex justify-end mb-2">
+     <Exportar onExcel={handleExportExcel} onCSV={handleExportCsv} disabled={datos.filter((person: any) => person.selected).length == 0} />
+     </div>
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
@@ -303,15 +338,8 @@ const handleItemsPerPageChange = (e: any) => {
           </ul>
         </nav>
 
-        <button
-          type="button"
-          className="rounded-md bg-blue-700 px-10 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-          onClick={() => {
-            handleExportButtonClick();
-          }}
-        >
-          Exportar
-        </button>
+
+      
       </div>
 </div>
    
