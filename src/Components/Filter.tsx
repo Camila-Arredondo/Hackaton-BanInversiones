@@ -1,9 +1,22 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './Filter.css';
+import PageContext from "../Context/page.context";
 export function Filter() {
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const { datos } = useContext(PageContext);
+
+  const [productos, setProductos] = useState([
+    {
+      id: 1,
+      nombre: "APV",
+    },
+    {
+      id: 2,
+      nombre: "Mis Metas",
+    },
+  ]);
   const isValidDay = (date: any) => {
    
     return (
@@ -29,7 +42,7 @@ export function Filter() {
               selected={startDate}
               onChange={(date) => setStartDate(date as Date | null)}
               filterDate={isValidDay}
-              
+              dateFormat={"dd-MM-yyyy"}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 pl-2 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
            
@@ -48,8 +61,11 @@ export function Filter() {
               placeholder="Seleccione un producto"
               className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:max-w-xs sm:text-sm sm:leading-6"
             >
-              <option>APV</option>
-              <option>Mis Metas</option>
+              <option></option>
+              {productos.map((item: any, index) => (
+                <option key={index} value={item.id}>{item.nombre}</option>
+            
+              ))}
             </select>
           </div>
         </div>
@@ -91,6 +107,8 @@ export function Filter() {
               type="text"
               name="first-name"
               id="first-name"
+              disabled
+              value={"$"+datos.filter((item: any) => item.selected)?.reduce((a: any, b: any) => a + b.monto, 0).toLocaleString('es-ES')}
               autoComplete="given-name"
               placeholder="Total seleccionado:"
               className="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
