@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PageContext from "../Context/page.context";
 import * as XLSX from 'xlsx-color';
 import { ArrowFilter } from "./arrowfilter";
@@ -6,9 +6,9 @@ import { Exportar } from "./exportar";
 
 export function Table() {
 
-  const { datos, updateData, setDatos } = useContext(PageContext);
+  const { datos, updateData, setDatos, loading } = useContext(PageContext);
 
-  const persons: any[] = datos;
+  let persons: any[] = datos;
   const [checked, setChecked] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +22,11 @@ export function Table() {
     setPersonfilter(persons.slice(start, end));
   }
 
+  useEffect(() => {
+    persons = datos;
+    setPersonfilter(persons.slice(0, itemsPerPage));
+    setCurrentPage(1);
+  },[datos])
 
   const handleExportCsv = () => {
     const selectedPersons = datos.filter((person: any) => person.selected);
