@@ -5,15 +5,25 @@ import './Filter.css';
 import PageContext from "../Context/page.context";
 export function Filter() {
   const [startDate, setStartDate] = useState<Date | null>(null);
-  const { datos } = useContext(PageContext);
-  const [productos, setProductos] = useState([
+  const { datos, productos, buscarCliente } = useContext(PageContext);
+  const [busquedadata, setBusquedaData] = useState<any>({});
+  const productosList :any[] = productos;
+  const [diaCargo, setDiaCargo] = useState([
     {
-      id: 1,
-      nombre: "APV",
+      id: 5,
+      dia: "5",
     },
     {
-      id: 2,
-      nombre: "Mis Metas",
+      id: 10,
+      dia: "10",
+    },
+    {
+      id: 15,
+      dia: "15",
+    },
+    {
+      id: 20,
+      dia: "20",
     },
   ]);
   const isValidDay = (date: any) => {
@@ -37,14 +47,34 @@ export function Filter() {
             Día de Cargo
           </label>
           <div className="mt-2">
-            <DatePicker
+          {/*<DatePicker
               isClearable
               selected={startDate}
               onChange={(date) => setStartDate(date as Date | null)}
               filterDate={isValidDay}
               dateFormat={"dd-MM-yyyy"}
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 pl-2 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
+  />*/}
+   <select
+    value={busquedadata.diaCargo}
+              onChange={(e) => {
+                setBusquedaData({
+                  ...busquedadata,
+                  diaCargo: e.target.value,
+                });
+              }}  
+              id="diaCargo"
+              name="diaCargo"
+              autoComplete="diaCargo-name"
+              placeholder="Seleccione un día"
+              className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:max-w-xs sm:text-sm sm:leading-6"
+            >
+              <option></option>
+              {diaCargo.map((item: any, index) => (
+                <option key={index} value={item.id}>{item.dia}</option>
+            
+              ))}
+            </select>
            
           </div>
         </div>
@@ -55,6 +85,13 @@ export function Filter() {
           </label>
           <div className="mt-2">
             <select
+              value={busquedadata.tipoproductos}
+              onChange={(e) => {
+                setBusquedaData({
+                  ...busquedadata,
+                  tipoproductos: e.target.value,
+                });
+              }}
               id="productos"
               name="tipoproductos"
               autoComplete="productos-name"
@@ -62,7 +99,7 @@ export function Filter() {
               className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:max-w-xs sm:text-sm sm:leading-6"
             >
               <option></option>
-              {productos.map((item: any, index) => (
+              {productosList.map((item: any, index) => (
                 <option key={index} value={item.id}>{item.nombre}</option>
             
               ))}
@@ -80,6 +117,13 @@ export function Filter() {
           <div className="mt-2 flex items-center">
             <input
               type="text"
+              value={busquedadata.rut}
+              onChange={(e) => {
+                setBusquedaData({
+                  ...busquedadata,
+                  rut: e.target.value,
+                });
+              }}
               name="buscar-rut"
               id="buscar-rut"
               placeholder="Buscar por RUT/RUN"
@@ -87,10 +131,19 @@ export function Filter() {
             />
             <button
               type="button"
+              onClick={async () => {
+                await buscarCliente({
+                  rut: busquedadata.rut ?? "",
+                  producto: busquedadata.tipoproductos ? parseInt(busquedadata.tipoproductos) : 0,
+                  fechapago: busquedadata.diaCargo ? parseInt(busquedadata.diaCargo) :  0,
+
+                });
+              }}
               className="ml-3 rounded-md bg-blue-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
             >
               Buscar
             </button>
+
           </div>
         </div>
 
