@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.1",
     "@headlessui/react": "^0.0.0-insiders.bfacb64",
     "@heroicons/react": "^2.0.18",
+    "@table-library/react-table-library": "^4.1.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -29,7 +31,9 @@
     "workbox-range-requests": "^6.6.0",
     "workbox-routing": "^6.6.0",
     "workbox-strategies": "^6.6.0",
-    "workbox-streams": "^6.6.0"
+    "workbox-streams": "^6.6.0",
+    "xlsx": "^0.18.5",
+    "xlsx-color": "^0.14.30"
   },
   "scripts": {
     "start": "react-scripts start",
