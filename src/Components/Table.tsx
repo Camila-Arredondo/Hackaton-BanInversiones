@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import PageContext from "../Context/page.context";
 import * as XLSX from 'xlsx-color';
+import { ArrowFilter } from "./arrowfilter";
 
 export function Table() {
 
@@ -12,14 +13,105 @@ export function Table() {
   const [currentPage, setCurrentPage] = useState(1);
   const [personfilter, setPersonfilter] = useState(persons.slice(0, itemsPerPage));
 
-
-
   const handlePageChange = (page: number) => {
     if(page < 1 || page > Math.ceil(persons.length / itemsPerPage)) return;
     setCurrentPage(page);
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     setPersonfilter(persons.slice(start, end));
+  }
+
+
+
+const handleCheckBoxChange = () => {
+  setChecked(!checked);
+  setPersonfilter(
+    personfilter.map((person) => {
+      return {
+        ...person,
+        selected: !checked,
+      };
+    })
+  );
+
+  setDatos( datos.map((person: any) => {
+    return {
+      ...person,
+      selected: !checked,
+    };
+  }));
+}
+
+const handleRowCheckBoxChange = (index: number) => {
+  var personchecked = personfilter.map((item, i) => {
+    if (i === index) {
+      let update = {
+        ...item,
+        selected: !item.selected,
+      };
+      updateData(update)
+      return update;
+    } else {
+      return item;
+    }
+  });
+  setPersonfilter(
+    personchecked
+  );
+  setChecked(personchecked.every((person) => person.selected));
+}
+
+
+const handleItemsPerPageChange = (e: any) => {
+  setItemsPerPage(Number(e.target.value));
+  setCurrentPage(1);
+  setPersonfilter(persons.slice(0, Number(e.target.value)));
+}
+
+  const handleExportButtonClick = () => {
+    const selectedPersons = datos.filter((person: any) => person.selected);
+    let dataExcel = selectedPersons.map((person: any ) => {
+      return {
+        "Rut": person.rut,
+        "Nombre": person.nombre,
+        "Banco": person.banco,
+        "N° de Cuenta": person.ncuenta,
+        "Monto": "$"+ person.monto.toLocaleString('es-ES'),
+        "Producto": person.producto,
+        "Codigo de Servicio": person.codigoserv,
+        
+      }
+    });
+    dataExcel.push({
+      "Rut": "",
+      "Nombre": "",
+      "Banco": "",
+      "N° de Cuenta": "TOTAL",
+      "Monto": "$" + selectedPersons.reduce((a: any, b: any) => a + b.monto, 0).toLocaleString('es-ES'),
+      "Producto": "",
+      "Codigo de Servicio": "",
+    });
+    let wb = XLSX.utils.book_new();
+    let ws = XLSX.utils.json_to_sheet(dataExcel);
+    var colorstyle = {
+      fill: {
+        patternType: "solid",
+        fgColor: { rgb: "1d4ed8" }
+      },
+      font: {
+        color: { rgb: "FFFFFFFF" },
+        bold: true
+      }
+    }
+    ws["A1"].s = colorstyle;
+    ws["B1"].s = colorstyle;
+    ws["C1"].s = colorstyle;
+    ws["D1"].s = colorstyle;
+    ws["E1"].s = colorstyle;
+    ws["F1"].s = colorstyle;
+    ws["G1"].s = colorstyle;
+    XLSX.utils.book_append_sheet(wb, ws, "ProductosPac");
+    XLSX.writeFile(wb, "ProductosPac.xlsx");
   }
 
   return (
@@ -39,22 +131,7 @@ export function Table() {
                         type="checkbox"
                         checked={checked}
                         onChange={() => {
-                          setChecked(!checked);
-                          setPersonfilter(
-                            personfilter.map((person) => {
-                              return {
-                                ...person,
-                                selected: !checked,
-                              };
-                            })
-                          );
-
-                          setDatos( datos.map((person: any) => {
-                            return {
-                              ...person,
-                              selected: !checked,
-                            };
-                          }));
+                          handleCheckBoxChange();
                         }}
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                       />
@@ -63,13 +140,34 @@ export function Table() {
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6"
                     >
-                      RUT/RUN
+                        <ArrowFilter title="RUT/RUN" onClick={(order)=>{
+                      if(order){
+                        var sorted = datos.sort((a:any, b:any) => a.rut.localeCompare(b.rut));
+                        setPersonfilter(sorted.slice(0, itemsPerPage));
+                        setCurrentPage(1);
+                      }else{
+                        var sorted = datos.sort((a:any, b:any) => b.rut.localeCompare(a.rut));
+                        setPersonfilter(sorted.slice(0, itemsPerPage));
+                        setCurrentPage(1);
+                      }
+                    }} />
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                      className="px-3 py-3.5 text-left text-sm font-semibold text-white "
                     >
-                      Nombre
+                      
+                    <ArrowFilter title="Nombre" onClick={(order)=>{
+                      if(order){
+                        var sorted = datos.sort((a:any, b:any) => a.nombre.localeCompare(b.nombre));
+                        setPersonfilter(sorted.slice(0, itemsPerPage));
+                        setCurrentPage(1);
+                      }else{
+                        var sorted = datos.sort((a:any, b:any) => b.nombre.localeCompare(a.nombre));
+                        setPersonfilter(sorted.slice(0, itemsPerPage));
+                        setCurrentPage(1);
+                      }
+                    }} />
                     </th>
                     <th
                       scope="col"
@@ -86,8 +184,21 @@ export function Table() {
                     <th
                       scope="col"
                       className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                      style={{width: "120px"}}
                     >
-                      Monto $
+                        <ArrowFilter title="Monto ($)" onClick={(order)=>{
+                      
+                      if(order){
+                        var sorted = datos.sort((a:any, b:any) => a.monto - b.monto);
+                        setPersonfilter(sorted.slice(0, itemsPerPage));
+                        setCurrentPage(1);
+                      }
+                      else{
+                        var sorted = datos.sort((a:any, b:any) => b.monto - a.monto);
+                        setPersonfilter(sorted.slice(0, itemsPerPage));
+                        setCurrentPage(1);
+                      }
+                    }} />
                     </th>
                     <th
                       scope="col"
@@ -112,25 +223,8 @@ export function Table() {
                             type="checkbox"
                             checked={person.selected}
                             onChange={() => {
-                              var personchecked = personfilter.map((item, i) => {
-                                if (i === index) {
-                                  let update = {
-                                    ...item,
-                                    selected: !item.selected,
-                                  };
-                                  updateData(update)
-                                  return update;
-                                } else {
-                                  return item;
-                                }
-                              });
-                              
-                             
-                              setPersonfilter(
-                                personchecked
-                              );
+                              handleRowCheckBoxChange(index);
 
-                              setChecked(personchecked.every((person) => person.selected));
                             }}
                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           />
@@ -174,9 +268,7 @@ export function Table() {
           className="bg-gray-50 border mr-3 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 "
           value={itemsPerPage}
           onChange={(e) => {
-            setItemsPerPage(Number(e.target.value));
-            setCurrentPage(1);
-            setPersonfilter(persons.slice(0, Number(e.target.value)));
+            handleItemsPerPageChange(e);
           }}
         >
           <option value="5">5</option>
@@ -215,54 +307,7 @@ export function Table() {
           type="button"
           className="rounded-md bg-blue-700 px-10 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           onClick={() => {
-            const selectedPersons = personfilter.filter((person) => person.selected);
-            let dataExcel = selectedPersons.map((person) => {
-              return {
-                "Rut": person.rut,
-                "Nombre": person.nombre,
-                "Banco": person.banco,
-                "N° de Cuenta": person.ncuenta,
-                "Monto": "$"+ person.monto.toLocaleString('es-ES'),
-                "Producto": person.producto,
-                "Codigo de Servicio": person.codigoserv,
-                
-              }
-            });
-
-            dataExcel.push({
-              "Rut": "",
-              "Nombre": "",
-              "Banco": "",
-              "N° de Cuenta": "TOTAL",
-              "Monto": "$" + selectedPersons.reduce((a: any, b: any) => a + b.monto, 0).toLocaleString('es-ES'),
-              "Producto": "",
-              "Codigo de Servicio": "",
-
-            });
-       
-            let wb = XLSX.utils.book_new();
-            let ws = XLSX.utils.json_to_sheet(dataExcel);
-            var colorstyle = {
-              fill: {
-                patternType: "solid",
-                fgColor: { rgb: "1d4ed8" }
-              },
-              font: {
-                color: { rgb: "FFFFFFFF" },
-                bold: true
-              }
-            }
-            ws["A1"].s = colorstyle;
-            ws["B1"].s = colorstyle;
-            ws["C1"].s = colorstyle;
-            ws["D1"].s = colorstyle;
-            ws["E1"].s = colorstyle;
-            ws["F1"].s = colorstyle;
-            ws["G1"].s = colorstyle;
-            XLSX.utils.book_append_sheet(wb, ws, "ProductosPac");
-
-            XLSX.writeFile(wb, "ProductosPac.xlsx");
-          
+            handleExportButtonClick();
           }}
         >
           Exportar

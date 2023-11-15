@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.arrowbutton {
+  cursor: pointer;
+  fill: white;
+}
+.arrowbutton:hover{
+  fill: #61dafb;
+}

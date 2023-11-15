@@ -6,7 +6,6 @@ import PageContext from "../Context/page.context";
 export function Filter() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const { datos } = useContext(PageContext);
-
   const [productos, setProductos] = useState([
     {
       id: 1,
@@ -80,9 +79,8 @@ export function Filter() {
           <div className="mt-2 flex items-center">
             <input
               type="text"
-              name="last-name"
-              id="last-name"
-              autoComplete="family-name"
+              name="buscar-rut"
+              id="buscar-rut"
               placeholder="Buscar por RUT/RUN"
               className="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
