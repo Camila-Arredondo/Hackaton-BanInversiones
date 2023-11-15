@@ -38,6 +38,7 @@ export function Filter() {
           </label>
           <div className="mt-2">
             <DatePicker
+              isClearable
               selected={startDate}
               onChange={(date) => setStartDate(date as Date | null)}
               filterDate={isValidDay}
