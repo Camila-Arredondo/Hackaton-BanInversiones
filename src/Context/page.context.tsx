@@ -11,7 +11,7 @@ const PageProvider: FC<{ children?: ReactNode }> = ({ children }) => {
 
     useEffect(() => {
         const getAllProducts = async () =>{
-            var prodcutos = await axios.get('http://localhost:8080/productos/');
+            var prodcutos = await axios.get('https://baninversionesback-ujqawy555q-uc.a.run.app/productos/');
             setProductos(prodcutos.data.map((x:any)=>{
               return {id: x.productoId, nombre: x.nombreProducto}
             }));
@@ -26,7 +26,7 @@ const PageProvider: FC<{ children?: ReactNode }> = ({ children }) => {
     
 
     const buscarCliente = async (busqueda: any) =>{
-        var cliente = await axios.post('http://localhost:8080/pac/search', busqueda);
+        var cliente = await axios.post('https://baninversionesback-ujqawy555q-uc.a.run.app/pac/search', busqueda);
         if(cliente.data){
           setDatos(cliente.data.map((x:any)=>{
             return {
