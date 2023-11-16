@@ -5,14 +5,15 @@ import { PageProvider } from "../Context/page.context";
 
 export function AdminPAC() {
   return (
-    <div>
+    <div  className="dark:bg-slate-800  bg-gray-100" 
+    style={{minHeight:"100vh"}}>
       <PageProvider>
         <Header></Header>
         <main
           style={{
             maxWidth: "1000px",
             margin: "0 auto",
-            marginBottom: "2rem",
+            paddingBottom: "2rem",
           }}
         >
           <Filter></Filter>
