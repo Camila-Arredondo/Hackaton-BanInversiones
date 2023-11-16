@@ -3,8 +3,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './Filter.css';
 import PageContext from "../Context/page.context";
+import MaskedInput from 'react-text-mask'
+import createRutMask from './rutmask';
+
 export function Filter() {
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const rutMask = createRutMask();
+
   const { datos, productos, buscarCliente } = useContext(PageContext);
   const [busquedadata, setBusquedaData] = useState<any>({});
   const productosList :any[] = productos;
@@ -42,7 +47,7 @@ export function Filter() {
         <div className="md:col-span-3">
           <label
             htmlFor="first-name"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 dark:text-white text-gray-900"
           >
             Día de Cargo
           </label>
@@ -67,7 +72,7 @@ export function Filter() {
               name="diaCargo"
               autoComplete="diaCargo-name"
               placeholder="Seleccione un día"
-              className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:max-w-xs sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 pl-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 md:max-w-xs sm:text-sm sm:leading-6 dark:gray-900"
             >
               <option></option>
               {diaCargo.map((item: any, index) => (
@@ -80,7 +85,7 @@ export function Filter() {
         </div>
 
         <div className="md:col-span-3 ">
-          <label className="block text-sm font-medium leading-6 text-gray-900">
+          <label className="block text-sm font-medium dark:text-white leading-6 text-gray-900">
             Producto
           </label>
           <div className="mt-2">
@@ -110,15 +115,18 @@ export function Filter() {
         <div className="md:col-span-4">
           <label
             htmlFor="last-name"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm dark:text-white font-medium leading-6 text-gray-900"
           >
             Buscar por RUT/RUN
           </label>
           <div className="mt-2 flex items-center">
-            <input
+            <MaskedInput
+              mask={rutMask}
+
+              
               type="text"
               value={busquedadata.rut}
-              onChange={(e) => {
+              onChange={(e:any) => {
                 setBusquedaData({
                   ...busquedadata,
                   rut: e.target.value,
@@ -127,19 +135,19 @@ export function Filter() {
               name="buscar-rut"
               id="buscar-rut"
               placeholder="Buscar por RUT/RUN"
-              className="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 placeholder:text-gray-500 dark:placeholder-gray-500 "
             />
             <button
               type="button"
               onClick={async () => {
                 await buscarCliente({
-                  rut: busquedadata.rut ?? "",
+                  rut: busquedadata.rut ? busquedadata.rut.replaceAll(".","") : "",
                   producto: busquedadata.tipoproductos ? parseInt(busquedadata.tipoproductos) : 0,
                   fechapago: busquedadata.diaCargo ? parseInt(busquedadata.diaCargo) :  0,
 
                 });
               }}
-              className="ml-3 rounded-md bg-blue-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+              className="ml-3 rounded-md bg-blue-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:bg-indigo-600 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
             >
               Buscar
             </button>
@@ -150,7 +158,7 @@ export function Filter() {
         <div className="md:col-span-5">
           <label
             htmlFor="first-name"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm dark:text-white font-medium leading-6 text-gray-900"
           >
             Total Seleccionado
           </label>
@@ -163,7 +171,7 @@ export function Filter() {
               value={"$"+datos.filter((item: any) => item.selected)?.reduce((a: any, b: any) => a + b.monto, 0).toLocaleString('es-ES')}
               autoComplete="given-name"
               placeholder="Total seleccionado:"
-              className="block w-full rounded-md border-0 py-1.5 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 bg-blue-400 py-1.5 pl-2 text-white shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -171,3 +179,5 @@ export function Filter() {
     </div>
   );
 }
+
+

@@ -161,7 +161,7 @@ const handleItemsPerPageChange = (e: any) => {
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-blue-700">
+                <thead className="bg-blue-700 dark:bg-slate-700">
                   <tr>
                     <th
                       scope="col"
@@ -254,7 +254,7 @@ const handleItemsPerPageChange = (e: any) => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-gray-200 bg-white dark:bg-slate-600">
                   {personfilter.map((person, index) => {
                     return (
                       <tr key={index}>
@@ -269,25 +269,25 @@ const handleItemsPerPageChange = (e: any) => {
                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           />
                         </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                          {person.rut}
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium dark:text-white text-gray-900 sm:pl-6">
+                          {parseInt(person.rut.split("-")[0]).toLocaleString("es-ES") + "-" + person.rut.split("-")[1]}
                         </td>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm dark:text-gray-200 font-medium text-gray-900 sm:pl-6">
                           {person.nombre}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm dark:text-gray-200 text-gray-500">
                           {person.banco}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm dark:text-gray-200 text-gray-500">
                           {person.ncuenta}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm dark:text-gray-200 text-gray-500">
                           ${person.monto.toLocaleString('es-ES')}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm dark:text-gray-200 text-gray-500">
                           {person.producto}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm dark:text-gray-200 text-gray-500">
                           {person.codigoserv}
                         </td>
                       </tr>
@@ -302,7 +302,7 @@ const handleItemsPerPageChange = (e: any) => {
 
 <div className="flex justify-between">
 <div className="mt-3 flex justify-end">
-<span className="mt-2 mr-2">Items por página: </span>
+<span className="mt-2 mr-2 text-black dark:text-white">Items por página: </span>
         <select
           id="countries"
           className="bg-gray-50 border mr-3 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 "
@@ -321,7 +321,7 @@ const handleItemsPerPageChange = (e: any) => {
 </div>
 <div className="mt-3 flex justify-end">
       
-     <span className="mt-2 mr-2"> {currentPage} de {  Math.ceil(persons.length / itemsPerPage) }</span>
+     <span className="mt-2 mr-2 dark:text-white "> {currentPage} de {  Math.ceil(persons.length / itemsPerPage) }</span>
         <nav className="mt-1 mr-2">
           <ul className="flex items-center -space-x-px h-8 text-sm">
             <li>
