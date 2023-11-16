@@ -32,6 +32,7 @@ const PageProvider: FC<{ children?: ReactNode }> = ({ children }) => {
             return {
               rut: x.rut,
               nombre: x.nombreCliente,
+              apellido: x.apellido,
               banco: x.nombreBanco,
               ncuenta: x.cuentasId,
               monto: x.monto,

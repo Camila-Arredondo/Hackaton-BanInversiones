@@ -273,7 +273,7 @@ const handleItemsPerPageChange = (e: any) => {
                           {parseInt(person.rut.split("-")[0]).toLocaleString("es-ES") + "-" + person.rut.split("-")[1]}
                         </td>
                         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm dark:text-gray-200 font-medium text-gray-900 sm:pl-6">
-                          {person.nombre}
+                          {person.nombre + " " + person.apellido} 
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm dark:text-gray-200 text-gray-500">
                           {person.banco}
